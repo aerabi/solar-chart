@@ -1,0 +1,54 @@
+<div class="container">
+  <div class="row">
+    <div class="col-3">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Daten</h5>
+          <p class="card-text">
+            <button type="button" class="btn btn-secondary btn-sm">Gemessene werte</button>
+            <br><br>
+            <button type="button" class="btn btn-warning btn-sm">Simulation</button>
+            <br><br>
+            <button type="button" class="btn btn-danger btn-sm">Internes Monitoring</button>
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="col-3">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Preis vor Ort (EUR)</h5>
+          <p class="card-text">
+            Öffentlicher Strom / kWh: <input type="text"><br><br>
+          Diesel-Treibstoff / Liter: <input type="text">
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="col-3">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Datum</h5>
+          <p class="card-text"><input type="text" ngbDatepicker #d="ngbDatepicker"/>
+            <button (click)="d.toggle()"><i class="fa fa-calendar"></i></button>
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="col-3">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Sprache</h5>
+          <p class="card-text">
+            <input type="radio" id="deutsch" name="language" value="deutsch"
+                   checked>
+            <label for="deutsch">Deutsch</label><br>
+            <input type="radio" id="english" name="language" value="english">
+            <label for="english">English</label><br>
+            <input type="radio" id="french" name="language" value="french">
+            <label for="french">Français</label>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
