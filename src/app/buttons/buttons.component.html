@@ -4,24 +4,42 @@
       <div class="card">
         <div class="card-body">
           <h5 class="card-title">Daten</h5>
-          <p class="card-text">
-            <button type="button" class="btn btn-secondary btn-sm">Gemessene werte</button>
-            <br><br>
-            <button type="button" class="btn btn-warning btn-sm">Simulation</button>
-            <br><br>
-            <button type="button" class="btn btn-danger btn-sm">Internes Monitoring</button>
-          </p>
+          <div class="btn-group btn-group-toggle">
+            <label class="btn-outline-secondary" ngbButtonLabel>
+              <input type="checkbox" ngbButton> Gemessene Werte
+            </label>
+          </div>
+          <div class="btn-group btn-group-toggle">
+            <label class="btn-outline-secondary" ngbButtonLabel>
+              <input type="checkbox" ngbButton> Simulation
+            </label>
+          </div>
+          <div class="btn-group btn-group-toggle">
+            <label class="btn-outline-secondary" ngbButtonLabel>
+              <input type="checkbox" ngbButton> Internes Monitoring
+            </label>
+          </div>
         </div>
       </div>
     </div>
     <div class="col-3">
       <div class="card">
         <div class="card-body">
-          <h5 class="card-title">Preis vor Ort (EUR)</h5>
-          <p class="card-text">
-            Öffentlicher Strom / kWh: <input type="text"><br><br>
-          Diesel-Treibstoff / Liter: <input type="text">
-          </p>
+          <h5 class="card-title">Preis vor Ort</h5>
+          Öffentlicher Strom:
+          <div class="input-group mb-3">
+            <input type="text" class="form-control" placeholder="0.19" aria-label="0.19" aria-describedby="strom">
+            <div class="input-group-append">
+              <span class="input-group-text" id="strom">€/kWh</span>
+            </div>
+          </div>
+          Diesel-Treibstoff:
+          <div class="input-group mb-3">
+            <input type="text" class="form-control" placeholder="1.01" aria-label="1.01" aria-describedby="diesel">
+            <div class="input-group-append">
+              <span class="input-group-text" id="diesel">€/lit</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -29,9 +47,13 @@
       <div class="card">
         <div class="card-body">
           <h5 class="card-title">Datum</h5>
-          <p class="card-text"><input type="text" ngbDatepicker #d="ngbDatepicker"/>
-            <button (click)="d.toggle()"><i class="fa fa-calendar"></i></button>
-          </p>
+          <div class="input-group mb-3">
+            <input type="text" class="form-control" placeholder="2019-10-16" aria-label="Recipient's username"
+                   aria-describedby="basic-addon2" ngbDatepicker #d="ngbDatepicker">
+            <div class="input-group-append">
+              <button class="btn btn-sm btn-outline-secondary" (click)="d.toggle()"><i class="fa fa-calendar"></i></button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -52,3 +74,4 @@
       </div>
     </div>
   </div>
+</div>
