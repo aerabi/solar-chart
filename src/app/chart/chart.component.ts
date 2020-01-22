@@ -2,7 +2,8 @@ import {AfterViewInit, Component, NgZone, OnDestroy, OnInit} from '@angular/core
 import * as am4core from '@amcharts/amcharts4/core';
 import * as am4charts from '@amcharts/amcharts4/charts';
 import am4themes_animated from '@amcharts/amcharts4/themes/animated';
-import {MOCK_DATA} from './chart.component.data';
+import {DUMMY_JSON} from './chart.component.data';
+import {ChartPoint, DataSet} from './chart.component.model';
 
 am4core.useTheme(am4themes_animated);
 
@@ -24,10 +25,11 @@ export class ChartComponent implements AfterViewInit, OnDestroy {
       const chart = am4core.create('chartdiv', am4charts.XYChart);
 
 // Add data
-      chart.data = MOCK_DATA;
+      chart.data = this.loadData(DUMMY_JSON);
 
 // Set input format for the dates
-      chart.dateFormatter.inputDateFormat = 'yyyy-MM-dd';
+//       chart.dateFormatter.inputDateFormat = 'yyyy-MM-dd';
+      chart.dateFormatter.inputDateFormat = 'HHmm';
 
 // Create axes
       const dateAxis = chart.xAxes.push(new am4charts.DateAxis());
@@ -82,11 +84,23 @@ export class ChartComponent implements AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy() {
-  this.zone.runOutsideAngular(() => {
-    if (this.chart) {
-      this.chart.dispose();
-    }
-  });
-}
+    this.zone.runOutsideAngular(() => {
+      if (this.chart) {
+        this.chart.dispose();
+      }
+    });
+  }
+
+  loadData(json: string): ChartPoint[] {
+    const parsedJson: DataSet[] = JSON.parse(json);
+    const indexRange: number[] = [...Array(parsedJson[0].list.length)];
+    const points: ChartPoint[] = indexRange.map(_ => ({ time: undefined }));
+    parsedJson.forEach(dataset => {
+      dataset.list.forEach((value, index) => {
+        points[index][dataset.name] = (dataset.name === 'time' ? value : parseFloat(value));
+      });
+    });
+    return points;
+  }
 
 }
