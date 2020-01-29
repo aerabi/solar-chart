@@ -9,9 +9,13 @@ cache:
     - node_modules
 
 addons:
-  chrome: stable
+  apt:
+    sources:
+      - google-chrome
+    packages:
+      - google-chrome-stable
 
 script:
   - ng build
   - ng lint
-  - ng test --watch false
+  - ng test -- --watch=false --no-progress --browsers=ChromeHeadlessNoSandbox
