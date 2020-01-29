@@ -25,7 +25,7 @@ describe('ChartComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  fit('loadData should work properly', () => {
+  it('loadData should work properly', () => {
     const data = component.loadData(DUMMY_JSON);
     const point: ChartPoint & any = {
       time: '0100',

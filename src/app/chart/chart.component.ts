@@ -21,10 +21,11 @@ export class ChartComponent implements AfterViewInit, OnDestroy {
 
   ngAfterViewInit() {
     this.zone.runOutsideAngular(() => {
-// Create chart instance
-      const chart = am4core.create('chartdiv', am4charts.XYChart);
+      // Create chart instance
+      this.chart = am4core.create('chartdiv', am4charts.XYChart);
+      const chart = this.chart;
 
-// Add data
+      // Add data
       const loadedData = this.loadData(DUMMY_JSON);
       chart.data = loadedData;
       console.log(loadedData);
