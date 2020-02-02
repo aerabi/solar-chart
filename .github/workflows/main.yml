@@ -1,6 +1,9 @@
 name: CI
 
-on: [push]
+on:
+  push:
+    branches:
+      - master
 
 jobs:
   build:
@@ -8,5 +11,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Angular Github Actions
-        uses: mayur-rawte/github-angular-actions@latest
+      - uses: actions/checkout@master
+      - uses: actions/setup-node@master
+        with:
+          node-version: '12.x'
+      - run: npm install
+      - run: npm run build:prod
+      - name: Upload artifact
+        uses: actions/upload-artifact@v1.0.0
+        with:
+          # Artifact name
+          name: Angular production build
+          # Directory containing files to upload
+          path: dist/
