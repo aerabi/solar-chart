@@ -36,4 +36,9 @@ describe('ChartComponent', () => {
     expect(data).toContain(point);
   });
 
+  it('normalizeLegendName should work properly', () => {
+    const name = component.normalizeLegendName('i2: Solar in');
+    expect(name).toEqual('Solar in');
+  });
+
 });

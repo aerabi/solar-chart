@@ -57,6 +57,8 @@ export class ChartComponent implements AfterViewInit, OnDestroy {
           series.tooltipText = '{value}';
           series.strokeWidth = 2;
           series.minBulletDistance = 15;
+          series.name = this.normalizeLegendName(key);
+          series.showOnInit = true;
 
           // Drop-shaped tooltips
           series.tooltip.background.cornerRadius = 20;
@@ -92,11 +94,10 @@ export class ChartComponent implements AfterViewInit, OnDestroy {
           // @ts-ignore
           chart.scrollbarX.series.push(series);
           chart.scrollbarX.parent = chart.bottomAxesContainer;
-
-          chart.events.on('ready', () => {
-            dateAxis.zoom({start: 0.79, end: 1});
-          });
         });
+
+      // Add legend
+      chart.legend = new am4charts.Legend();
     });
   }
 
@@ -118,6 +119,10 @@ export class ChartComponent implements AfterViewInit, OnDestroy {
       });
     });
     return points;
+  }
+
+  normalizeLegendName(name: string): string {
+    return name.replace(/i[0-9]+:\s/, '');
   }
 
 }
