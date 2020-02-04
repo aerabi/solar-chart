@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, NgZone, OnDestroy} from '@angular/core';
+import {AfterViewInit, Component, Input, NgZone, OnChanges, OnDestroy, SimpleChanges} from '@angular/core';
 import * as am4core from '@amcharts/amcharts4/core';
 import * as am4charts from '@amcharts/amcharts4/charts';
 import am4themes_animated from '@amcharts/amcharts4/themes/animated';
@@ -12,14 +12,27 @@ am4core.useTheme(am4themes_animated);
   templateUrl: './chart.component.html',
   styleUrls: ['./chart.component.css']
 })
-export class ChartComponent implements AfterViewInit, OnDestroy {
+export class ChartComponent implements AfterViewInit, OnDestroy, OnChanges {
 
+  @Input() showSolarValues: boolean;
   private chart: am4charts.XYChart;
 
   constructor(private zone: NgZone) {
   }
 
   ngAfterViewInit() {
+    this.loadChart();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    this.reloadData();
+  }
+
+  private reloadData(): void {
+    this.chart.data = this.loadData(DUMMY_JSON);
+  }
+
+  private loadChart() {
     this.zone.runOutsideAngular(() => {
       // Create chart instance
       this.chart = am4core.create('chartdiv', am4charts.XYChart);
@@ -89,11 +102,13 @@ export class ChartComponent implements AfterViewInit, OnDestroy {
           chart.scrollbarY.parent = chart.leftAxesContainer;
           chart.scrollbarY.toBack();
 
-          // Create a horizontal scrollbar with previe and place it underneath the date axis
-          chart.scrollbarX = new am4charts.XYChartScrollbar();
-          // @ts-ignore
-          chart.scrollbarX.series.push(series);
-          chart.scrollbarX.parent = chart.bottomAxesContainer;
+          if (key.includes('Solar in')) {
+            // Create a horizontal scrollbar with previe and place it underneath the date axis
+            chart.scrollbarX = new am4charts.XYChartScrollbar();
+            // @ts-ignore
+            chart.scrollbarX.series.push(series);
+            chart.scrollbarX.parent = chart.bottomAxesContainer;
+          }
         });
 
       // Add legend
@@ -109,8 +124,17 @@ export class ChartComponent implements AfterViewInit, OnDestroy {
     });
   }
 
+  private filterDataSets(dataSets: DataSet[]): DataSet[] {
+    return dataSets.filter(dataSet => {
+      if (dataSet.name === 'time') {
+        return true;
+      }
+      return !!(this.showSolarValues && (dataSet.name.includes('Solar') || dataSet.name.match(/i.*: Load/)));
+    });
+  }
+
   loadData(json: string): ChartPoint[] {
-    const parsedJson: DataSet[] = JSON.parse(json);
+    const parsedJson: DataSet[] = this.filterDataSets(JSON.parse(json));
     const indexRange: number[] = [...Array(parsedJson[0].list.length)];
     const points: ChartPoint[] = indexRange.map(_ => ({ time: undefined }));
     parsedJson.forEach(dataset => {

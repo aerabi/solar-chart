@@ -30,7 +30,7 @@
           <h5 class="card-title">Daten</h5>
           <div class="btn-group btn-group-toggle">
             <label class="btn-outline-secondary" ngbButtonLabel>
-              <input type="checkbox" ngbButton> Gemessene Werte
+              <input type="checkbox" [(ngModel)]="showSolarValues" ngbButton> Gemessene Werte
             </label>
           </div>
           <div class="btn-group btn-group-toggle">
@@ -99,3 +99,5 @@
     </div>
   </div>
 </div>
+
+<app-chart [showSolarValues]="showSolarValues"></app-chart>

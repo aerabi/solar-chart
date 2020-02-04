@@ -16,6 +16,8 @@ export class ButtonsComponent implements OnInit {
     gps: '12°07N'
   };
 
+  showSolarValues = true;
+
   searchQuery;
   availableHospitals: Hospital[] = [
     new Hospital('Iran', 'Emam Khomeini', '12121', 'Karaj'),
