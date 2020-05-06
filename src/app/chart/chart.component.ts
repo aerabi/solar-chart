@@ -4,6 +4,9 @@ import * as am4charts from '@amcharts/amcharts4/charts';
 import am4themes_animated from '@amcharts/amcharts4/themes/animated';
 import {DUMMY_JSON} from './chart.component.data';
 import {ChartPoint, DataSet} from './chart.component.model';
+import {HttpClient} from '@angular/common/http';
+import {map} from 'rxjs/operators';
+import {Observable} from 'rxjs';
 
 am4core.useTheme(am4themes_animated);
 
@@ -17,7 +20,7 @@ export class ChartComponent implements AfterViewInit, OnDestroy, OnChanges {
   @Input() showSolarValues: boolean;
   private chart: am4charts.XYChart;
 
-  constructor(private zone: NgZone) {
+  constructor(private zone: NgZone, private http: HttpClient) {
   }
 
   ngAfterViewInit() {
@@ -29,23 +32,23 @@ export class ChartComponent implements AfterViewInit, OnDestroy, OnChanges {
   }
 
   private reloadData(): void {
-    this.chart.data = this.loadData(DUMMY_JSON);
+    this.loadDataFromBackend().subscribe(data => this.chart.data = data);
   }
 
   private loadChart() {
-    this.zone.runOutsideAngular(() => {
+    this.zone.runOutsideAngular( async () => {
       // Create chart instance
       this.chart = am4core.create('chartdiv', am4charts.XYChart);
       const chart = this.chart;
 
       // Add data
-      const loadedData = this.loadData(DUMMY_JSON);
+      const loadedData = await this.loadDataFromBackend().toPromise();
       chart.data = loadedData;
       console.log(loadedData);
 
       // Set input format for the dates
       // chart.dateFormatter.inputDateFormat = 'yyyy-MM-dd';
-      chart.dateFormatter.inputDateFormat = 'HHmm';
+      chart.dateFormatter.inputDateFormat = 'yyyy-MM-ddTHH:mm:ss+ZZZZ';
 
       // Create date axes
       const dateAxis = chart.xAxes.push(new am4charts.DateAxis());
@@ -103,7 +106,7 @@ export class ChartComponent implements AfterViewInit, OnDestroy, OnChanges {
           chart.scrollbarY.toBack();
 
           if (key.includes('Solar in')) {
-            // Create a horizontal scrollbar with previe and place it underneath the date axis
+            // Create a horizontal scrollbar with preview and place it underneath the date axis
             chart.scrollbarX = new am4charts.XYChartScrollbar();
             // @ts-ignore
             chart.scrollbarX.series.push(series);
@@ -143,6 +146,11 @@ export class ChartComponent implements AfterViewInit, OnDestroy, OnChanges {
       });
     });
     return points;
+  }
+
+  loadDataFromBackend(from: string = '2018-05-02 11:00:00', until: string = '2018-05-02 18:10:00'): Observable<ChartPoint[]> {
+    return this.http.get(`https://arno-chart.appspot.com/chart/api/records/from/${from}/to/${until}/`)
+      .pipe(map((response: {records: ChartPoint[]}) => response.records));
   }
 
   normalizeLegendName(name: string): string {
